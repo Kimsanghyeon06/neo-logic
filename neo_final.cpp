@@ -32,6 +32,42 @@ void printPuzzle(int arr[5][5]) {
     }
 }
 
+//힌트 출력
+void printhint_row(int row[5]) {
+    int count = 0;
+    for (int i = 0; i < 5; i++) {
+        if (row[i] == 1) {
+            count++;
+        }
+        else {
+            if (count > 0) {
+                cout << count << " ";
+            }
+            count = 0;
+        }
+    }
+    if (count > 0) {
+        cout << count << " ";
+    }
+}
+void printhint_col(int puzzle[5][5]) {
+    cout << "가로: \n";
+    for (int i = 0; i < 5; i++) {
+        printhint_row(puzzle[i]);
+        cout << "\n";
+    }
+    cout << "세로: \n";
+    for (int j = 0; j < 5; j++) {
+        int temp_col[5];
+        for (int i = 0; i < 5; i++) {
+            temp_col[i] = puzzle[i][j];
+        }
+        printhint_row(temp_col);
+        cout << "\n";
+    }
+}
+
+
 int alphatonum(char ch) {
     return tolower(ch) - 'a';  // a->0, b->1, ...
 }
@@ -50,11 +86,13 @@ bool checkAnswer(int row, int col) {
 int main() {
     cout << "0~9 사이의 퍼즐 번호를 선택하세요: ";
     cin >> puzzle_index;
+    printhint_col(puzzles[puzzle_index]); //힌트 출력
 
     string input;
     while (life > 0) {
         printPuzzle(user_choice);
         cout << "목숨: " << life << " | 칸 선택 예: A1" << endl;
+        cout << "좌표 입력: ";
         cin >> input;
 
         if (input.length() < 2) {
@@ -71,12 +109,14 @@ int main() {
         }
 
         if (user_choice[row][col] == 1) {
-            cout << "이미 선택한 칸입니다." << endl;
+            cout << "이미 선택한 칸입니다.\n" << endl;
             continue;
         }
 
         if (checkAnswer(row, col)) {
-            cout << "정답입니다!\n";
+            cout << "---------------\n";
+            cout << "  정답입니다!\n";
+            cout << "---------------\n";
         }
         else {
             cout << "틀렸습니다. 목숨 -1\n";
