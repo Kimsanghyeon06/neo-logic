@@ -86,7 +86,7 @@ bool checkAnswer(int row, int col) {
 int main() {
     cout << "0~9 사이의 퍼즐 번호를 선택하세요: ";
     cin >> puzzle_index;
-    printhint_col(puzzles[puzzle_index]); //힌트 출력
+    printhint_col(puzzles[puzzle_index]); //힌트 출력함
 
     string input;
     while (life > 0) {
