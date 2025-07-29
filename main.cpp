@@ -24,9 +24,9 @@ void printPuzzle(int arr[5][5]) {
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {
             if (arr[i][j] == 1)
-                cout << "■";
+                cout << "■ ";
             else
-                cout << "□";
+                cout << "□ ";
         }
         cout << endl;
     }
@@ -70,6 +70,11 @@ int main() {
             continue;
         }
 
+        if (user_choice[row][col] == 1) {
+            cout << "이미 선택한 칸입니다." << endl;
+            continue;
+        }
+
         if (checkAnswer(row, col)) {
             cout << "정답입니다!\n";
         }
@@ -84,11 +89,25 @@ int main() {
                 if (puzzles[puzzle_index][i][j] == 1 && user_choice[i][j] == 0)
                     Finished = false;
 
+        //최종결과 출력
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                if (puzzles[puzzle_index][i][j] != user_choice[i][j]) {
+                    Finished = false;
+                    break;
+                }
+            }
+            if (!Finished) break;
+        }
+
         if (Finished) {
-            cout << "퍼즐을 완성했습니다 \n";
+            cout << "\n최종 결과:\n";
+            printPuzzle(user_choice);
+            cout << "\n축하합니다! 퍼즐을 완성했습니다!\n";
             break;
         }
     }
+
 
     if (life <= 0)
         cout << "GAME OVER\n" << "정답 : \n", printPuzzle(puzzles[puzzle_index]);
