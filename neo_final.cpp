@@ -24,6 +24,14 @@ string puzzle_name[10] = {
 int user_choice[5][5] = { 0 };  // 사용자가 정답 입력하는 보드
 int puzzle_index = 0; // 선택한 퍼즐 번호
 
+
+class Hint {
+public:
+
+    void Hint_Puzzle(int puzzle[5][5], int user[5][5]);
+};
+
+
 void printPuzzle(int arr[5][5]) {
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {
@@ -36,39 +44,7 @@ void printPuzzle(int arr[5][5]) {
     }
 }
 
-//힌트 출력
-void printhint_row(int row[5]) {
-    int count = 0;
-    for (int i = 0; i < 5; i++) {
-        if (row[i] == 1) {
-            count++;
-        }
-        else {
-            if (count > 0) {
-                cout << count << " ";
-            }
-            count = 0;
-        }
-    }
-    if (count > 0) {
-        cout << count << " ";
-    }
-}
-void printhint_col(int puzzle[5][5]) {
-    cout << "가로: \n";
-    for (int i = 0; i < 5; i++) {
-        printhint_row(puzzle[i]);
-        cout << "\n";
-    }
-    cout << "세로: \n";
-    for (int j = 0; j < 5; j++) {
-        int temp_col[5];
-        for (int i = 0; i < 5; i++) {
-            temp_col[i] = puzzle[i][j];
-        }
-        printhint_row(temp_col);
-        cout << "\n";
-void Hint_Puzzle(int puzzle[5][5], int user[5][5]) {
+void Hint::Hint_Puzzle(int puzzle[5][5], int user[5][5]) {
     int col_H[5][3] = { 0 };
     int col_H_Count[5] = { 0 };
 
@@ -150,21 +126,13 @@ bool checkAnswer(int row, int col) {
 }
 
 int main() {
-
+    Hint hint;
     cout << "0~9 사이의 퍼즐 번호를 선택하세요: ";
     cin >> puzzle_index;
-    printhint_col(puzzles[puzzle_index]); //힌트 출력함
-
-    string input;
-    while (life > 0) {
-        printPuzzle(user_choice);
-        cout << "목숨: " << life << " | 칸 선택 예: A1" << endl;
-        cout << "좌표 입력: ";
-        
     cout << "Hint:" << puzzle_name[puzzle_index] << endl;
     string input;
     while (life > 0) {
-        Hint_Puzzle(puzzles[puzzle_index], user_choice);
+        hint.Hint_Puzzle(puzzles[puzzle_index], user_choice);
         cout << "목숨: " << life << " (칸 선택 예: A1)" << endl;
         cout << "좌표 선택: ";
         cin >> input;
@@ -183,12 +151,11 @@ int main() {
         }
 
         if (user_choice[row][col] == 1) {
-            cout << "이미 선택한 칸입니다.\n" << endl;
+            cout << "이미 선택한 칸입니다." << endl;
             continue;
         }
 
         if (checkAnswer(row, col)) {
-            cout << "---------------\n";
             cout << "\n---------------\n";
             cout << "  정답입니다!\n";
             cout << "---------------\n";
