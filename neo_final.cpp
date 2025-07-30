@@ -36,7 +36,6 @@ void printPuzzle(int arr[5][5]) {
     }
 }
 
-<<<<<<< HEAD
 //힌트 출력
 void printhint_row(int row[5]) {
     int count = 0;
@@ -69,7 +68,6 @@ void printhint_col(int puzzle[5][5]) {
         }
         printhint_row(temp_col);
         cout << "\n";
-=======
 void Hint_Puzzle(int puzzle[5][5], int user[5][5]) {
     int col_H[5][3] = { 0 };
     int col_H_Count[5] = { 0 };
@@ -132,7 +130,6 @@ void Hint_Puzzle(int puzzle[5][5], int user[5][5]) {
                 cout << "□ ";
         }
         cout << endl;
->>>>>>> e22e3adcb834983cb1143150ebc45ce67da511f0
     }
 }
 
@@ -156,7 +153,6 @@ int main() {
 
     cout << "0~9 사이의 퍼즐 번호를 선택하세요: ";
     cin >> puzzle_index;
-<<<<<<< HEAD
     printhint_col(puzzles[puzzle_index]); //힌트 출력함
 
     string input;
@@ -171,7 +167,6 @@ int main() {
         Hint_Puzzle(puzzles[puzzle_index], user_choice);
         cout << "목숨: " << life << " (칸 선택 예: A1)" << endl;
         cout << "좌표 선택: ";
->>>>>>> e22e3adcb834983cb1143150ebc45ce67da511f0
         cin >> input;
 
         if (input.length() < 2) {
@@ -193,11 +188,8 @@ int main() {
         }
 
         if (checkAnswer(row, col)) {
-<<<<<<< HEAD
             cout << "---------------\n";
-=======
             cout << "\n---------------\n";
->>>>>>> e22e3adcb834983cb1143150ebc45ce67da511f0
             cout << "  정답입니다!\n";
             cout << "---------------\n";
         }
