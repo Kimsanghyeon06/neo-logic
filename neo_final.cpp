@@ -160,7 +160,7 @@ int main() {
         printPuzzle(user_choice);
         cout << "목숨: " << life << " | 칸 선택 예: A1" << endl;
         cout << "좌표 입력: ";
-=======
+        
     cout << "Hint:" << puzzle_name[puzzle_index] << endl;
     string input;
     while (life > 0) {
