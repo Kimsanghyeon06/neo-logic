@@ -17,6 +17,10 @@ int puzzles[10][5][5] = {
     {{1,0,0,0,1},{0,1,0,1,0},{0,0,1,0,0},{0,1,0,1,0},{1,0,0,0,1}}  // X자
 };
 
+string puzzle_name[10] = {
+    "하트","십자가","웃는얼굴","다이아몬드","숫자 5","벽돌탑","하강 화살표","T자","테두리","X자"
+};
+
 int user_choice[5][5] = { 0 };  // 사용자가 정답 입력하는 보드
 int puzzle_index = 0; // 선택한 퍼즐 번호
 
@@ -32,38 +36,68 @@ void printPuzzle(int arr[5][5]) {
     }
 }
 
-//힌트 출력
-void printhint_row(int row[5]) {
-    int count = 0;
-    for (int i = 0; i < 5; i++) {
-        if (row[i] == 1) {
-            count++;
-        }
-        else {
-            if (count > 0) {
-                cout << count << " ";
-            }
-            count = 0;
-        }
-    }
-    if (count > 0) {
-        cout << count << " ";
-    }
-}
-void printhint_col(int puzzle[5][5]) {
-    cout << "가로: \n";
-    for (int i = 0; i < 5; i++) {
-        printhint_row(puzzle[i]);
-        cout << "\n";
-    }
-    cout << "세로: \n";
-    for (int j = 0; j < 5; j++) {
-        int temp_col[5];
+void Hint_Puzzle(int puzzle[5][5], int user[5][5]) {
+    int col_H[5][3] = { 0 };
+    int col_H_Count[5] = { 0 };
+
+    // 열 힌트 계산
+    for (int col = 0; col < 5; col++) {
+        int count = 0, index = 0;
         for (int i = 0; i < 5; i++) {
-            temp_col[i] = puzzle[i][j];
+            if (puzzle[i][col] == 1) count++;
+            else if (count > 0) {
+                col_H[col][index++] = count;
+                count = 0;
+            }
         }
-        printhint_row(temp_col);
-        cout << "\n";
+        if (count > 0) col_H[col][index++] = count;
+        if (index == 0) col_H[col][index++] = 0;
+        col_H_Count[col] = index;
+    }
+
+    // 열 힌트 출력 (최대 2줄만 출력)
+    for (int line = 0; line < 3; line++) {
+        cout << "   ";
+        for (int col = 0; col < 5; col++) {
+            int hintIndex = col_H_Count[col] - 3 + line;
+            if (hintIndex >= 0)
+                cout << " " << col_H[col][hintIndex];
+            else
+                cout << "  ";
+        }
+        cout << endl;
+    }
+
+    // 행 힌트 + 퍼즐 출력
+    for (int i = 0; i < 5; i++) {
+        int row_H[3] = { 0 };
+        int count = 0, index = 0;
+        for (int j = 0; j < 5; j++) {
+            if (puzzle[i][j] == 1) count++;
+            else if (count > 0) {
+                row_H[index++] = count;
+                count = 0;
+            }
+        }
+        if (count > 0) row_H[index++] = count;
+        if (index == 0) row_H[index++] = 0;
+
+        // 행 힌트 출력 (최대 2칸 오른쪽 정렬)
+        if (index == 1)
+            cout << "  " << row_H[0];
+        else
+            cout << row_H[0] << " " << row_H[1];
+
+        cout << " ";
+
+        // 퍼즐 출력
+        for (int j = 0; j < 5; j++) {
+            if (user[i][j] == 1)
+                cout << "■ ";
+            else
+                cout << "□ ";
+        }
+        cout << endl;
     }
 }
 
@@ -84,15 +118,15 @@ bool checkAnswer(int row, int col) {
 }
 
 int main() {
+
     cout << "0~9 사이의 퍼즐 번호를 선택하세요: ";
     cin >> puzzle_index;
-    printhint_col(puzzles[puzzle_index]); //힌트 출력함
-
+    cout << "Hint:" << puzzle_name[puzzle_index] << endl;
     string input;
     while (life > 0) {
-        printPuzzle(user_choice);
-        cout << "목숨: " << life << " | 칸 선택 예: A1" << endl;
-        cout << "좌표 입력: ";
+        Hint_Puzzle(puzzles[puzzle_index], user_choice);
+        cout << "목숨: " << life << " (칸 선택 예: A1)" << endl;
+        cout << "좌표 선택: ";
         cin >> input;
 
         if (input.length() < 2) {
@@ -109,15 +143,16 @@ int main() {
         }
 
         if (user_choice[row][col] == 1) {
-            cout << "이미 선택한 칸입니다.\n" << endl;
+            cout << "이미 선택한 칸입니다." << endl;
             continue;
         }
 
         if (checkAnswer(row, col)) {
-            cout << "---------------\n";
+            cout << "\n---------------\n";
             cout << "  정답입니다!\n";
             cout << "---------------\n";
         }
+
         else {
             cout << "틀렸습니다. 목숨 -1\n";
         }
@@ -129,17 +164,6 @@ int main() {
                 if (puzzles[puzzle_index][i][j] == 1 && user_choice[i][j] == 0)
                     Finished = false;
 
-        //최종결과 출력
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                if (puzzles[puzzle_index][i][j] != user_choice[i][j]) {
-                    Finished = false;
-                    break;
-                }
-            }
-            if (!Finished) break;
-        }
-
         if (Finished) {
             cout << "\n최종 결과:\n";
             printPuzzle(user_choice);
@@ -147,7 +171,6 @@ int main() {
             break;
         }
     }
-
 
     if (life <= 0)
         cout << "GAME OVER\n" << "정답 : \n", printPuzzle(puzzles[puzzle_index]);
