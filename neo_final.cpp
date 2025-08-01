@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cctype>
 #include <string>
+#include <sstream>
+#include <limits>
 using namespace std;
 
 int life = 3;
@@ -122,41 +124,61 @@ int main() {
     cout << "0~9 사이의 퍼즐 번호를 선택하세요: ";
     cin >> puzzle_index;
     cout << "Hint:" << puzzle_name[puzzle_index] << endl;
-    string input;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    string input_num;
     while (life > 0) {
         Hint_Puzzle(puzzles[puzzle_index], user_choice);
         cout << "목숨: " << life << " (칸 선택 예: A1)" << endl;
         cout << "좌표 선택: ";
-        cin >> input;
 
-        if (input.length() < 2) {
-            cout << "입력이 잘못되었습니다." << endl;
-            continue;
+        getline(cin, input_num);
+        stringstream stream(input_num);
+        string input_sin;
+        bool cor = false;
+        bool wro = false;
+        int wro_count = 0;
+
+        while (stream >> input_sin) {
+            if (input_sin.length() < 2) {
+                cout << "입력이 잘못되었습니다." << endl;
+                continue;
+            }
+
+            int row = alphatonum(input_sin[0]); // A~E → 0~4
+            int col = input_sin[1] - '1'; // 1~5 → 0~4
+
+            if (row < 0 || row >= 5 || col < 0 || col >= 5) {
+                cout << "잘못된 위치입니다." << endl;
+                continue;
+            }
+
+            if (user_choice[row][col] == 1) {
+                cout << "이미 선택한 칸입니다." << endl;
+                continue;
+            }
+
+            bool correct = checkAnswer(row, col);
+            if (correct) {
+                cor = true;
+            }
+            else {
+                wro = true;
+                wro_count++;
+            }
         }
 
-        int row = alphatonum(input[0]); // A~E → 0~4
-        int col = input[1] - '1'; // 1~5 → 0~4
-
-        if (row < 0 || row >= 5 || col < 0 || col >= 5) {
-            cout << "잘못된 위치입니다." << endl;
-            continue;
-        }
-
-        if (user_choice[row][col] == 1) {
-            cout << "이미 선택한 칸입니다." << endl;
-            continue;
-        }
-
-        if (checkAnswer(row, col)) {
+        if (cor || wro) {
             cout << "\n---------------\n";
-            cout << "  정답입니다!\n";
+            if (cor) {
+                cout << "  정답입니다!\n";
+
+            }
+            if (wro) {
+                cout << wro_count << "개 틀렸으므로 목숨이 " << wro_count << "개 차감되었습니다!\n";
+            }
             cout << "---------------\n";
         }
-
-        else {
-            cout << "틀렸습니다. 목숨 -1\n";
-        }
-
         // 승리 조건 확인
         bool Finished = true;
         for (int i = 0; i < 5; i++)
