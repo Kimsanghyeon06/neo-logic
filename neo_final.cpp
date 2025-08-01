@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <limits>
+#include <vector>
 using namespace std;
 
 int life = 3;
@@ -142,19 +143,19 @@ int main() {
 
         getline(cin, input_num);
         stringstream stream(input_num);
-        string input_sin;
         bool cor = false;
         bool wro = false;
         int wro_count = 0;
+        vector<string> incor_temp;
 
-        while (stream >> input_sin) {
-            if (input_sin.length() < 2) {
+        while (stream >> input_num) {
+            if (input_num.length() != 2) {
                 cout << "입력이 잘못되었습니다." << endl;
                 continue;
             }
 
-            int row = alphatonum(input_sin[0]); // A~E → 0~4
-            int col = input_sin[1] - '1'; // 1~5 → 0~4
+            int row = alphatonum(input_num[0]); // A~E → 0~4
+            int col = input_num[1] - '1'; // 1~5 → 0~4
 
             if (row < 0 || row >= 5 || col < 0 || col >= 5) {
                 cout << "잘못된 위치입니다." << endl;
@@ -172,6 +173,7 @@ int main() {
             }
             else {
                 wro = true;
+                incor_temp.push_back(input_num);
                 wro_count++;
             }
         }
