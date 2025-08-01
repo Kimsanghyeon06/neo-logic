@@ -27,14 +27,6 @@ string puzzle_name[10] = {
 int user_choice[5][5] = { 0 };  // 사용자가 정답 입력하는 보드
 int puzzle_index = 0; // 선택한 퍼즐 번호
 
-
-class Hint {
-public:
-
-    void Hint_Puzzle(int puzzle[5][5], int user[5][5]);
-};
-
-
 void printPuzzle(int arr[5][5]) {
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {
@@ -47,7 +39,7 @@ void printPuzzle(int arr[5][5]) {
     }
 }
 
-void Hint::Hint_Puzzle(int puzzle[5][5], int user[5][5]) {
+void Hint_Puzzle(int puzzle[5][5], int user[5][5]) {
     int col_H[5][3] = { 0 };
     int col_H_Count[5] = { 0 };
 
@@ -129,15 +121,15 @@ bool checkAnswer(int row, int col) {
 }
 
 int main() {
-    Hint hint;
+
     cout << "0~9 사이의 퍼즐 번호를 선택하세요: ";
     cin >> puzzle_index;
     cout << "Hint:" << puzzle_name[puzzle_index] << endl;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.ignore();
 
     string input_num;
     while (life > 0) {
-        hint.Hint_Puzzle(puzzles[puzzle_index], user_choice);
+        Hint_Puzzle(puzzles[puzzle_index], user_choice);
         cout << "목숨: " << life << " (칸 선택 예: A1)" << endl;
         cout << "좌표 선택: ";
 
@@ -147,6 +139,7 @@ int main() {
         bool wro = false;
         int wro_count = 0;
         vector<string> incor_temp;
+        vector<string> cor_temp;
 
         while (stream >> input_num) {
             if (input_num.length() != 2) {
@@ -170,6 +163,7 @@ int main() {
             bool correct = checkAnswer(row, col);
             if (correct) {
                 cor = true;
+                cor_temp.push_back(input_num);
             }
             else {
                 wro = true;
@@ -178,17 +172,31 @@ int main() {
             }
         }
 
-        if (cor || wro) {
-            cout << "\n---------------\n";
-            if (cor) {
-                cout << "  정답입니다!\n";
+        if (cor && wro) {
+            cout << "정답과 오답이 섞여 있습니다.\n";
 
-            }
-            if (wro) {
-                cout << wro_count << "개 틀렸으므로 목숨이 " << wro_count << "개 차감되었습니다!\n";
-            }
-            cout << "---------------\n";
         }
+
+        cout << "\n---------------\n";
+        if (cor) {
+            cout << "  정답입니다!\n";
+            cout << "맞는 좌표: ";
+            for (size_t i = 0; i < cor_temp.size(); ++i) {
+                cout << cor_temp[i] << " ";
+            }
+            cout << "\n";
+            cout << endl;
+        }
+        if (wro) {
+            cout << wro_count << "개 틀렸으므로 목숨이 " << wro_count << "개 차감되었습니다!\n";
+            cout << "틀린 좌표: ";
+            for (size_t i = 0; i < incor_temp.size(); ++i) {
+                cout << incor_temp[i] << " ";
+            }
+            cout << "\n";
+            cout << endl;
+        }
+        cout << "---------------\n";
         // 승리 조건 확인
         bool Finished = true;
         for (int i = 0; i < 5; i++)
