@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include "Print.h"
 using namespace std;
@@ -24,7 +23,7 @@ void Print::printHint(int puzzle[5][5], int user[5][5]) {
 
     // 열 힌트 출력 (최대 3줄)
     for (int line = 0; line < 3; line++) {
-        cout << "   ";
+        cout << "      "; // 행 힌트 공간 확보 (6칸)
         for (int col = 0; col < 5; col++) {
             int hintIndex = col_H_Count[col] - 3 + line;
             if (hintIndex >= 0)
@@ -49,13 +48,15 @@ void Print::printHint(int puzzle[5][5], int user[5][5]) {
         if (count > 0) row_H[index++] = count;
         if (index == 0) row_H[index++] = 0;
 
-        // 행 힌트 출력 (최대 2칸 오른쪽 정렬)
+        // 행 힌트 출력 (최대 3칸 오른쪽 정렬)
         if (index == 1)
-            cout << "  " << row_H[0];
+            cout << "    " << row_H[0]; // 4칸 띄움
+        else if (index == 2)
+            cout << "  " << row_H[0] << " " << row_H[1];
         else
-            cout << row_H[0] << " " << row_H[1];
+            cout << row_H[0] << " " << row_H[1] << " " << row_H[2];
 
-        cout << " ";
+        cout << "  "; // 퍼즐 좌표와 힌트 사이 간격
 
         // 퍼즐 출력
         for (int j = 0; j < 5; j++) {
@@ -66,7 +67,4 @@ void Print::printHint(int puzzle[5][5], int user[5][5]) {
         }
         cout << endl;
     }
-
 }
-
-
